@@ -1,0 +1,17 @@
+{
+  "name": "q8",
+  "version": "1.0.0",
+  "type": "module",
+  
+  "main": "googlefetch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "node-fetch": "^3.0.0",
+    "cheerio": "^1.0.0-rc.10"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

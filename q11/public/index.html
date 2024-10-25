@@ -1,0 +1,75 @@
+<!-- public/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Cricket Scores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Cricket Scores</h1>
+    <table id="scoreTable">
+        <thead>
+            <tr>
+                <th>Match</th>
+                <th>Score</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3">Loading...</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on('liveScores', (scores) => {
+            const tbody = document.querySelector('#scoreTable tbody');
+            tbody.innerHTML = ''; // Clear existing scores
+
+            if (scores && scores.length > 0) {
+                scores.forEach(score => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${score.match}</td>
+                        <td>${score.score}</td>
+                        <td>${score.status}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="3">No live scores available</td>';
+                tbody.appendChild(row);
+            }
+        });
+    </script>
+</body>
+</html>

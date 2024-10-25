@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Chatbot</title>
+    <style>
+        #chat-box { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+        .message { margin: 5px 0; }
+        .bot { color: blue; }
+        .user { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Chat with Library Bot</h1>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:3000');
+        const chatBox = document.getElementById('chat-box');
+        
+        function displayMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${sender}`;
+            messageElement.innerText = text;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (userInput.trim()) {
+                displayMessage(userInput, 'user');
+                ws.send(userInput);
+                document.getElementById('user-input').value = '';
+            }
+        }
+
+        ws.onmessage = (event) => {
+            displayMessage(event.data, 'bot');
+        };
+
+        ws.onopen = () => {
+            displayMessage("Connected to the Library Bot!", 'bot');
+        };
+
+        ws.onclose = () => {
+            displayMessage("Disconnected from the Library Bot.", 'bot');
+        };
+    </script>
+</body>
+</html>
